@@ -8,3 +8,6 @@ Main technologies :
 4. FTP
 
 The list will be supplemented...
+
+# Launch
+	uvicorn main:app --reload
