@@ -9,5 +9,8 @@ Main technologies :
 
 The list will be supplemented...
 
+# Install
+	pip install fastapi[all]
+	
 # Launch
 	uvicorn main:app --reload
