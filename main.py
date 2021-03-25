@@ -37,10 +37,10 @@ async def get_object(id: int):
 
 
 @app.patch("/api/educ_part/example/{id}")
-async def update_object(object: Object):
+async def update_object(object: Object, id:int):
     cur.execute("update object set field1 = %s, field2 = %s where object.id = %s", (object.field1, object.field2, id))
     con.commit()
-    cur.execute("select * from object where id = %s", id)
+    cur.execute("select * from object where id = %s", [id])
     if cur is not None:
         return cur.fetchall()
     else:
