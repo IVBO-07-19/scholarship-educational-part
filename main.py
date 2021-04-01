@@ -10,7 +10,7 @@ con = psycopg2.connect(
      port=5432
 )
 
-cur = con.cursor()
+cur = con.cursor(cursor_factory=RealDictCursor)
 
 class Object(BaseModel):
     field1: str
