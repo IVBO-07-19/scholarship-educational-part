@@ -12,7 +12,7 @@ The list will be supplemented...
 # Install
 	pip install fastapi[all]
 	pip install uvicorn
-    pip install psycopg2
+    	pip install psycopg2
 # Launch
 Для подключения к базе данных, надо создать файл config.ini
 со следующим содержимым:
@@ -23,7 +23,7 @@ The list will be supplemented...
     # Ваш пароль
     password = postgres
     # Название вашей базы данных
-    database = educational_part
+    database = EducationalPart
     # Хост
     host = 127.0.0.1
     # Порт
