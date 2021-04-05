@@ -30,7 +30,7 @@ The list will be supplemented...
     # Порт
     port = 5432
 ````
-Для запуска сервиса, надо указать следующую команду
+Для запуска сервиса, надо указать следующую команду:
 
 	uvicorn main:app --reload
 # API Endpoints
