@@ -1,4 +1,5 @@
 from datetime import date
+
 from pydantic import BaseModel
 
 '''Получение в течение не менее 2-х следующих друг за другом промежуточных аттестаций, предшествующих назначению
@@ -6,6 +7,7 @@ from pydantic import BaseModel
 
 
 class ExcellentStudent(BaseModel):
+    id: int = None
     excellent: bool
 
 
@@ -14,6 +16,7 @@ class ExcellentStudent(BaseModel):
 
 
 class ArticleWriter(BaseModel):
+    id: int = None
     event_name: str
     prize_place: int
     participation: str
@@ -27,11 +30,13 @@ class ArticleWriter(BaseModel):
 
 
 class OlympiadWinner(BaseModel):
+    id: int = None
     event_name: str
     level: str
     prize_place: int
     participation: str
     date: date
     scores: float = 0.0
+
 
 __all__ = ["ArticleWriter", "ExcellentStudent", "OlympiadWinner"]
