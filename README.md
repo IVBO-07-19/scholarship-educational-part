@@ -11,15 +11,33 @@ The list will be supplemented...
 
 # Install
 	pip install fastapi[all]
-	
+	pip install uvicorn
+    pip install psycopg2
 # Launch
+Для подключения к базе данных, надо создать файл config.ini
+со следующим содержимым:
+````editorconfig
+    [postgres]
+    # Ваш логин
+    user = postgres
+    # Ваш пароль
+    password = postgres
+    # Название вашей базы данных
+    database = educational_part
+    # Хост
+    host = 127.0.0.1
+    # Порт
+    port = 5432
+````
+Для запуска сервиса, надо указать следующую команду
+
 	uvicorn main:app --reload
 # API Endpoints
 List of methods
 
 ![image](https://user-images.githubusercontent.com/70891118/112685871-36bc3d00-8e86-11eb-98d6-370bab819475.png)
 
-1. GET get_objects
+##1. GET get_objects
 
 Request body is empty in this method
 
@@ -27,46 +45,93 @@ URL: http://1365a251a33b.ngrok.io/api/educ_part/example
 
 Answer body example
 
-![image](https://user-images.githubusercontent.com/70891118/112686831-a121ad00-8e87-11eb-8a32-7535b43f8f5b.png)
+```json
+[
+  [
+    1,
+    "string1",
+    "string1"
+  ],
+  [
+    2,
+    "string2",
+    "string2"   
+  ]
+]
+```
 
-2. POST put_object
+##2. POST put_object
 
 Request body example
 
-![image](https://user-images.githubusercontent.com/70891118/112686401-f0b3a900-8e86-11eb-9647-c1228d06cafe.png)
+```json
+{
+  "field1": "string2",
+  "field2": "string2"
+}
+```
 
 URL: http://1365a251a33b.ngrok.io/api/educ_part/example
 
 Answer body example
+```json
+[
+  [
+    1,
+    "string1",
+    "string1"
+  ],
+  [
+    2,
+    "string2",
+    "string2"   
+  ]
+]
+```
 
-![image](https://user-images.githubusercontent.com/70891118/112686410-f4473000-8e86-11eb-8950-d4ca14593c01.png)
-
-3. GET get_object
+##3. GET get_object
 
 Request body is empty in this method
 
 URL: http://1365a251a33b.ngrok.io/api/educ_part/example/{id}
 
-4. PATCH update_object
+##4. PATCH update_object
 
 Request body example
-
-![image](https://user-images.githubusercontent.com/70891118/112687552-b4814800-8e88-11eb-8c91-9bae5f485cb5.png)
+```json
+{
+  "field1": "newstring2",
+  "field2": "newstring2"
+}
+```
 
 URL: http://1365a251a33b.ngrok.io/api/educ_part/example/{id}
 
 Answer body example
+```json
+[
+  [
+    2,
+    "newstring2",
+    "newstring2"
+  ]
+]
+```
 
-![image](https://user-images.githubusercontent.com/70891118/112687605-c531be00-8e88-11eb-9fbf-fff6eb0ce077.png)
-
-
-5. DELETE delete_object
+##5. DELETE delete_object
 
 Request body is empty in this method
 
 URL: http://1365a251a33b.ngrok.io/api/educ_part/example/{id}
 
 Answer body example
-
-![image](https://user-images.githubusercontent.com/70891118/112687704-ea263100-8e88-11eb-85b2-6c02e74aebdf.png)
+```json
+[
+  [
+    1,
+    "string1",
+    "string1"
+  ]
+]
+```
 

@@ -1,13 +1,19 @@
 from fastapi import FastAPI
+from psycopg2.extras import RealDictCursor
 from pydantic import BaseModel
 import psycopg2
+import configparser
+from appendix_models import *
+
+config = configparser.ConfigParser()
+config.read('config.ini', encoding='utf-8-sig')
 
 con = psycopg2.connect(
-     database='educational_part',
-     user='postgres',
-     password='admin',
-     host='127.0.0.1',
-     port=5432
+     database=config.get('postgres', 'database'),
+     user=config.get('postgres', 'user'),
+     password=config.get('postgres', 'password'),
+     host=config.get('postgres', 'host'),
+     port=int(config.get('postgres', 'port'))
 )
 
 cur = con.cursor(cursor_factory=RealDictCursor)
