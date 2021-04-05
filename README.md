@@ -38,7 +38,7 @@ List of methods
 
 ![image](https://user-images.githubusercontent.com/70891118/112685871-36bc3d00-8e86-11eb-98d6-370bab819475.png)
 
-##1. GET get_objects
+## 1. GET get_objects
 
 Request body is empty in this method
 
@@ -61,7 +61,7 @@ Answer body example
 ]
 ```
 
-##2. POST put_object
+## 2. POST put_object
 
 Request body example
 
@@ -90,13 +90,13 @@ Answer body example
 ]
 ```
 
-##3. GET get_object
+## 3. GET get_object
 
 Request body is empty in this method
 
 URL: http://1365a251a33b.ngrok.io/api/educ_part/example/{id}
 
-##4. PATCH update_object
+## 4. PATCH update_object
 
 Request body example
 ```json
@@ -119,7 +119,7 @@ Answer body example
 ]
 ```
 
-##5. DELETE delete_object
+## 5. DELETE delete_object
 
 Request body is empty in this method
 
