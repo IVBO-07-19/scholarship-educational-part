@@ -19,11 +19,11 @@ The list will be supplemented...
 со следующим содержимым:
 ````editorconfig
     [postgres]
-    # Ваш логин
+    # Логин
     user = postgres
-    # Ваш пароль
+    # Пароль
     password = postgres
-    # Название вашей базы данных
+    # Название базы данных
     database = EducationalPart
     # Хост
     host = 127.0.0.1
@@ -34,105 +34,175 @@ The list will be supplemented...
 
 	uvicorn main:app --reload
 # API Endpoints
-List of methods
 
-![image](https://user-images.githubusercontent.com/70891118/112685871-36bc3d00-8e86-11eb-98d6-370bab819475.png)
+Add later
 
-## 1. GET get_objects
+## Article Writer
+
+### 1. GET get_all_article_writers
+
+Endpoint: /api/educ_part/article_writers
 
 Request body is empty in this method
-
-URL: http://1365a251a33b.ngrok.io/api/educ_part/example
 
 Answer body example
 
 ```json
 [
-  [
-    1,
-    "string1",
-    "string1"
-  ],
-  [
-    2,
-    "string2",
-    "string2"   
-  ]
+  {
+    "id": 1,
+    "id_person": 1,
+    "event_name": "Статья",
+    "prize_place": 1,
+    "participation": "Индивид",
+    "date": "2021-04-08",
+    "scores": 234.57
+  },
+  {
+    "id": 2,
+    "id_person": 2,
+    "event_name": "Что-то",
+    "prize_place": 76,
+    "participation": "Индивид",
+    "date": "2021-04-01",
+    "scores": 3474575.57
+  }
 ]
 ```
 
-## 2. POST put_object
+### 2. POST create_new_article_writer
+
+Endpoint: /api/educ_part/article_writers
 
 Request body example
 
 ```json
 {
-  "field1": "string2",
-  "field2": "string2"
+  "id_person": 0,
+  "event_name": "string",
+  "prize_place": 0,
+  "participation": "string",
+  "date": "2021-04-06",
+  "scores": 0
 }
 ```
 
-URL: http://1365a251a33b.ngrok.io/api/educ_part/example
+Answer body example
+```json
+{
+  "id": 1,
+  "id_person": 0,
+  "event_name": "string",
+  "prize_place": 0,
+  "participation": "string",
+  "date": "2021-04-06",
+  "scores": 0
+}
+```
+## Excellent Student
+### 1. GET get_all_excellent_students
+
+Endpoint: /api/educ_part/excellent_students
+
+Request body is empty in this method
 
 Answer body example
 ```json
 [
-  [
-    1,
-    "string1",
-    "string1"
-  ],
-  [
-    2,
-    "string2",
-    "string2"   
-  ]
+  {
+    "id": 1,
+    "id_person": 3,
+    "is_excellent": true
+  },
+  {
+    "id": 2,
+    "id_person": 2,
+    "is_excellent": true
+  }
 ]
 ```
 
-## 3. GET get_object
+### 2. POST create_new_excellent_student
 
-Request body is empty in this method
-
-URL: http://1365a251a33b.ngrok.io/api/educ_part/example/{id}
-
-## 4. PATCH update_object
+Endpoint: /api/educ_part/excellent_students
 
 Request body example
 ```json
 {
-  "field1": "newstring2",
-  "field2": "newstring2"
+  "id_person": 1,
+  "is_excellent": true
 }
 ```
 
-URL: http://1365a251a33b.ngrok.io/api/educ_part/example/{id}
-
 Answer body example
 ```json
-[
-  [
-    2,
-    "newstring2",
-    "newstring2"
-  ]
-]
+{
+  "id": 1,
+  "id_person": 1,
+  "is_excellent": true
+}
 ```
+## Olympiad Winner
 
-## 5. DELETE delete_object
+### 1. GET get_all_olympiad_winner
+
+Endpoint: /api/educ_part/olympiad_winners
 
 Request body is empty in this method
 
-URL: http://1365a251a33b.ngrok.io/api/educ_part/example/{id}
-
 Answer body example
 ```json
 [
-  [
-    1,
-    "string1",
-    "string1"
-  ]
+  {
+    "id": 1,
+    "id_person": 3,
+    "event_name": "Олимпиада",
+    "level": "Мировой",
+    "prize_place": 1,
+    "participation": "Индивид",
+    "date": "2021-04-17",
+    "scores": 32124.23
+  },
+  {
+    "id": 2,
+    "id_person": 2,
+    "event_name": "Физтех",
+    "level": "Мировой",
+    "prize_place": 35,
+    "participation": "Индивид",
+    "date": "2021-04-01",
+    "scores": 1.23
+  }
 ]
 ```
 
+### 2. POST create_new_olympiad_winner
+
+Endpoint: /api/educ_part/olympiad_winners
+
+Request body example
+```json
+{
+  "id_person": 2,
+  "event_name": "Event",
+  "level": "first",
+  "prize_place": 56,
+  "participation": "who",
+  "date": "2021-04-06",
+  "scores": 105
+}
+```
+
+Answer body example
+```json
+{
+  "id": 4,
+  "id_person": 2,
+  "event_name": "Event",
+  "level": "first",
+  "prize_place": 56,
+  "participation": "who",
+  "date": "2021-04-06",
+  "scores": 105
+}
+```
