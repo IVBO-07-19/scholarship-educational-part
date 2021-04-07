@@ -1,20 +1,22 @@
 # Educational part of scolarship project
 Hi, this is the part of scolarship project.
 
-Main technologies :
+Испоьзуемые технологии:
 1. Python
 2. FastApi
 3. PostgreSql
 4. FTP
 
-The list will be supplemented...
+Список будет дополняться...
 
-# Install
+# Установка
+Для использования данного сервиса, вам надо выполнить следующие команды:
+
 	pip install fastapi[all]
 	pip install uvicorn
     pip install psycopg2
     
-# Launch
+# Запуск
 Для подключения к базе данных, надо создать файл config.ini
 со следующим содержимым:
 ````editorconfig
@@ -32,12 +34,16 @@ The list will be supplemented...
 ````
 Для запуска сервиса, надо указать следующую команду:
 
-	uvicorn main:app --reload
+    uvicorn main:app --reload
+
 # API Endpoints
 
 Add later
 
 ## Article Writer
+
+Методы для работы с приложениями для получателей награды (приза) в течение 1-ого года, предшествующего назначению повышенной государственной академической
+стипендии, за результаты проектной деятельности и (или) опытно-конструкторской работы.
 
 ### 1. GET get_all_article_writers
 
@@ -99,7 +105,83 @@ Answer body example
   "scores": 0
 }
 ```
+
+
+### 3. GET get_article_writer
+
+Endpoint: /api/educ_part/article_writers/{id}
+
+Request body is empty in this method
+
+Answer body example
+
+```json
+{
+  "id": 1,
+  "id_person": 1,
+  "event_name": "Мероприятие",
+  "prize_place": 56,
+  "participation": "Индивид",
+  "date": "2021-04-06",
+  "scores": 34213
+}
+```
+
+### 4. PUT update_article_writer
+Endpoint: /api/educ_part/article_writers/{id}
+
+Request body example
+
+```json
+{
+  "event_name": "string",
+  "prize_place": 0,
+  "participation": "string",
+  "date": "2021-04-07",
+  "scores": 0
+}
+```
+
+Answer body example
+```json
+{
+  "id": 1,
+  "id_person": 1,
+  "event_name": "string",
+  "prize_place": 0,
+  "participation": "string",
+  "date": "2021-04-07",
+  "scores": 0
+}
+```
+
+### 5. DELETE delete_article_writer
+
+Endpoint: /api/educ_part/article_writers/{id}
+
+Request body is empty in this method
+
+Answer body example
+
+```json
+{
+  "id": 1,
+  "id_person": 1,
+  "event_name": "string",
+  "prize_place": 0,
+  "participation": "string",
+  "date": "2021-04-07",
+  "scores": 0
+}
+```
+
 ## Excellent Student
+
+Методы для работы с приложениями для тех, кто получал в течение не менее 2-х следующих 
+друг за другом промежуточных 
+аттестаций, предшествующих назначению
+повышенной государственной академической стипендии, только оценок «отлично»
+
 ### 1. GET get_all_excellent_students
 
 Endpoint: /api/educ_part/excellent_students
@@ -142,7 +224,64 @@ Answer body example
   "is_excellent": true
 }
 ```
+
+### 3. GET get_excellent_student
+
+Endpoint: /api/educ_part/excellent_students/{id}
+
+Request body is empty in this method
+
+Answer body example
+
+```json
+{
+  "id": 1,
+  "id_person": 2,
+  "excellent": true
+}
+```
+
+### 4. PUT update_excellent_student
+Endpoint: /api/educ_part/excellent_students/{id}
+
+Request body example
+
+```json
+{
+  "excellent": false
+}
+```
+
+Answer body example
+```json
+{
+  "id": 1,
+  "id_person": 2,
+  "excellent": false
+}
+```
+
+### 5. DELETE delete_excellent_student
+
+Endpoint: /api/educ_part/excellent_students/{id}
+
+Request body is empty in this method
+
+Answer body example
+
+```json
+{
+  "id": 1,
+  "id_person": 2,
+  "excellent": false
+}
+```
+
 ## Olympiad Winner
+
+Методы для работы с приложениями для победителей или призеров международной, всероссийской, ведомственной или региональной олимпиады, конкурса, соревнования,
+состязания или иного мероприятия, направленных на выявление учебных достижений студентов, проведенных в течение 1-ого года,
+предшествующего назначению повышенной государственной академической:
 
 ### 1. GET get_all_olympiad_winner
 
@@ -204,5 +343,77 @@ Answer body example
   "participation": "who",
   "date": "2021-04-06",
   "scores": 105
+}
+```
+
+### 3. GET get_olympiad_winner
+
+Endpoint: /api/educ_part/olympiad_winners/{id}
+
+Request body is empty in this method
+
+Answer body example
+
+```json
+{
+  "id": 2,
+  "id_person": 2,
+  "event_name": "Физтех",
+  "level": "Мировой",
+  "prize_place": 35,
+  "participation": "Индивид",
+  "date": "2021-04-01",
+  "scores": 1.23
+}
+```
+
+### 4. PUT update_olympiad_winner
+Endpoint: /api/educ_part/olympiad_winners/{id}
+
+Request body example
+
+```json
+{
+  "event_name": "string",
+  "level": "string",
+  "prize_place": 0,
+  "participation": "string",
+  "date": "2021-04-07",
+  "scores": 0
+}
+```
+
+Answer body example
+```json
+{
+  "id": 2,
+  "id_person": 2,
+  "event_name": "string",
+  "level": "string",
+  "prize_place": 0,
+  "participation": "string",
+  "date": "2021-04-07",
+  "scores": 0
+}
+```
+
+### 5. DELETE delete_olympiad_winner
+
+Endpoint: /api/educ_part/olympiad_winners/{id}
+
+Request body is empty in this method
+
+Answer body example
+
+```json
+{
+  "id": 2,
+  "id_person": 2,
+  "event_name": "string",
+  "level": "string",
+  "prize_place": 0,
+  "participation": "string",
+  "date": "2021-04-07",
+  "scores": 0
 }
 ```

@@ -40,7 +40,7 @@ cur.execute('''create table excellent_students
         constraint excellent_students_students_id_person_fk
             references students
                 on delete cascade,
-    is_excellent bool default false not null
+    excellent bool default false not null
 );
     create unique index excellent_students_id_uindex
         on excellent_students (id);

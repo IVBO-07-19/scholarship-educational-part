@@ -8,8 +8,8 @@ from pydantic import BaseModel
 
 class ExcellentStudent(BaseModel):
     id: int = None
-    id_person: int
-    is_excellent: bool
+    id_person: int = None
+    excellent: bool
 
 
 '''Получатель награды (приза) в течение 1-ого года, предшествующего назначению повышенной государственной академической
@@ -18,7 +18,7 @@ class ExcellentStudent(BaseModel):
 
 class ArticleWriter(BaseModel):
     id: int = None
-    id_person: int
+    id_person: int = None
     event_name: str
     prize_place: int
     participation: str
@@ -33,7 +33,7 @@ class ArticleWriter(BaseModel):
 
 class OlympiadWinner(BaseModel):
     id: int = None
-    id_person: int
+    id_person: int = None
     event_name: str
     level: str
     prize_place: int
