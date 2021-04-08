@@ -34,7 +34,7 @@ async def get_all_article_writers():
         return None
 
 
-@app.post('/api/educ_part/article_writers')
+@app.post('/api/educ_part/article_writers', response_model=ArticleWriter)
 async def create_new_article_writer(article_writer: ArticleWriter):
     cur.execute('''insert into article_writers(
                     id_person,

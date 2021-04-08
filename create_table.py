@@ -74,6 +74,6 @@ cur.execute('''create table olympiad_winners
     scores float default 0 not null
 );
     create unique index olympiad_winner_id_uindex
-        on olympiad_winner (id);
+        on olympiad_winners (id);
 ''')
 con.commit()
