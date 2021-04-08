@@ -20,12 +20,12 @@ con = psycopg2.connect(
 cur = con.cursor(cursor_factory=RealDictCursor)
 app = FastAPI()
 
-
 '''Получатель награды (приза) в течение 1-ого года, 
 предшествующего назначению повышенной государственной академической
 стипендии, за результаты проектной деятельности и (или) опытно-конструкторской работы'''
 
-@app.get('/api/educ_part/article_writers')
+
+@app.get('/api/educ_part/article_writers', response_model=ArticleWriter)
 async def get_all_article_writers():
     cur.execute('select * from article_writers')
     if cur is not None:
@@ -56,7 +56,7 @@ async def create_new_article_writer(article_writer: ArticleWriter):
     return article_writer
 
 
-@app.get('/api/educ_part/article_writers/{id}')
+@app.get('/api/educ_part/article_writers/{id}', response_model=ArticleWriter)
 async def get_article_writer(id: int):
     cur.execute('select * from article_writers where id=%s', [id])
     if cur is not None:
@@ -65,7 +65,7 @@ async def get_article_writer(id: int):
         return None
 
 
-@app.put('/api/educ_part/article_writers/{id}')
+@app.put('/api/educ_part/article_writers/{id}', response_model=ArticleWriter)
 async def update_article_writer(id: int, article_writer: ArticleWriter):
     cur.execute('select id_person from article_writers where id=%s', [id])
     id_person = cur.fetchone()['id_person']
@@ -88,7 +88,7 @@ async def update_article_writer(id: int, article_writer: ArticleWriter):
     return article_writer
 
 
-@app.delete('/api/educ_part/article_writers/{id}')
+@app.delete('/api/educ_part/article_writers/{id}', response_model=ArticleWriter)
 async def delete_article_writer(id: int):
     cur.execute('select * from article_writers where id=%s', [id])
     article_writer = cur.fetchone()
@@ -101,7 +101,8 @@ async def delete_article_writer(id: int):
 промежуточных аттестаций, предшествующих назначению
 повышенной государственной академической стипендии, только оценок «отлично»'''
 
-@app.get('/api/educ_part/excellent_students')
+
+@app.get('/api/educ_part/excellent_students', response_model=ExcellentStudent)
 async def get_all_excellent_students():
     cur.execute('select * from excellent_students')
     if cur is not None:
@@ -110,7 +111,7 @@ async def get_all_excellent_students():
         return None
 
 
-@app.post('/api/educ_part/excellent_students')
+@app.post('/api/educ_part/excellent_students', response_model=ExcellentStudent)
 async def create_new_excellent_student(excellent_student: ExcellentStudent):
     cur.execute('''insert into excellent_students(id_person, excellent) 
                     values(%s,%s)''',
@@ -122,7 +123,7 @@ async def create_new_excellent_student(excellent_student: ExcellentStudent):
     return excellent_student
 
 
-@app.get('/api/educ_part/excellent_students/{id}')
+@app.get('/api/educ_part/excellent_students/{id}', response_model=ExcellentStudent)
 async def get_excellent_student(id: int):
     cur.execute('select * from excellent_students where id=%s', [id])
     if cur is not None:
@@ -131,7 +132,7 @@ async def get_excellent_student(id: int):
         return None
 
 
-@app.put('/api/educ_part/excellent_students/{id}')
+@app.put('/api/educ_part/excellent_students/{id}', response_model=ExcellentStudent)
 async def update_excellent_student(id: int, excellent_student: ExcellentStudent):
     cur.execute('select id_person from excellent_students where id=%s', [id])
     id_person = cur.fetchone()['id_person']
@@ -146,7 +147,7 @@ async def update_excellent_student(id: int, excellent_student: ExcellentStudent)
     return excellent_student
 
 
-@app.delete('/api/educ_part/excellent_students/{id}')
+@app.delete('/api/educ_part/excellent_students/{id}', response_model=ExcellentStudent)
 async def delete_excellent_student(id: int):
     cur.execute('select * from excellent_students where id=%s', [id])
     excellent_student = cur.fetchone()
@@ -161,7 +162,8 @@ async def delete_excellent_student(id: int):
 проведенных в течение 1-ого года,
 предшествующего назначению повышенной государственной академической:'''
 
-@app.get('/api/educ_part/olympiad_winners')
+
+@app.get('/api/educ_part/olympiad_winners', response_model=OlympiadWinner)
 async def get_all_olympiad_winners():
     cur.execute('select * from olympiad_winners')
     if cur is not None:
@@ -170,7 +172,7 @@ async def get_all_olympiad_winners():
         return None
 
 
-@app.post('/api/educ_part/olympiad_winners')
+@app.post('/api/educ_part/olympiad_winners', response_model=OlympiadWinner)
 async def create_new_olympiad_winner(olympiad_winners: OlympiadWinner):
     cur.execute('''insert into olympiad_winners(id_person, event_name, level, prize_place, participation, date, scores) 
                     values(%s,%s,%s,%s,%s,%s,%s)''',
@@ -187,7 +189,7 @@ async def create_new_olympiad_winner(olympiad_winners: OlympiadWinner):
     return olympiad_winners
 
 
-@app.get('/api/educ_part/olympiad_winners/{id}')
+@app.get('/api/educ_part/olympiad_winners/{id}', response_model=OlympiadWinner)
 async def get_olympiad_winner(id: int):
     cur.execute('select * from olympiad_winners where id=%s', [id])
     if cur is not None:
@@ -196,7 +198,7 @@ async def get_olympiad_winner(id: int):
         return None
 
 
-@app.put('/api/educ_part/olympiad_winners/{id}')
+@app.put('/api/educ_part/olympiad_winners/{id}', response_model=OlympiadWinner)
 async def update_olympiad_winner(id: int, olympiad_winner: OlympiadWinner):
     cur.execute('select id_person from olympiad_winners where id=%s', [id])
     id_person = cur.fetchone()['id_person']
@@ -221,7 +223,7 @@ async def update_olympiad_winner(id: int, olympiad_winner: OlympiadWinner):
     return olympiad_winner
 
 
-@app.delete('/api/educ_part/olympiad_winners/{id}')
+@app.delete('/api/educ_part/olympiad_winners/{id}', response_model=OlympiadWinner)
 async def delete_olympiad_winner(id: int):
     cur.execute('select * from olympiad_winners where id=%s', [id])
     olympiad_winner = cur.fetchone()
