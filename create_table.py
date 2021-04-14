@@ -19,7 +19,7 @@ cur = con.cursor(cursor_factory=RealDictCursor)
 cur.execute('''create table excellent_students
 (   
     id serial not null,
-    id_person int not null,
+    id_person varchar not null,
     excellent bool default false not null
 );
     create unique index excellent_students_id_uindex
@@ -28,7 +28,7 @@ cur.execute('''create table excellent_students
 cur.execute('''create table article_writers
 (
     id serial not null,
-    id_person int not null,
+    id_person varchar not null,
     event_name varchar not null,
     prize_place int not null,
     participation varchar not null,
@@ -41,7 +41,7 @@ cur.execute('''create table article_writers
 cur.execute('''create table olympiad_winners
 (
     id serial not null,
-    id_person int not null,
+    id_person varchar not null,
     event_name varchar not null,
     level varchar not null,
     prize_place int not null,
