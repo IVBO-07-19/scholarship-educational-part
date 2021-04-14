@@ -8,7 +8,7 @@ from pydantic import BaseModel
 
 class ExcellentStudent(BaseModel):
     id: int = None
-    id_person: int = None
+    id_person: str = None
     excellent: bool
 
 
@@ -18,7 +18,7 @@ class ExcellentStudent(BaseModel):
 
 class ArticleWriter(BaseModel):
     id: int = None
-    id_person: int = None
+    id_person: str = None
     event_name: str
     prize_place: int
     participation: str
@@ -33,7 +33,7 @@ class ArticleWriter(BaseModel):
 
 class OlympiadWinner(BaseModel):
     id: int = None
-    id_person: int = None
+    id_person: str = None
     event_name: str
     level: str
     prize_place: int
