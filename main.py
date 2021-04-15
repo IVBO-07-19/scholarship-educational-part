@@ -3,6 +3,7 @@ import configparser
 import psycopg2
 from fastapi import FastAPI
 from psycopg2.extras import RealDictCursor
+from typing import List
 
 from appendix_models import *
 
@@ -25,7 +26,7 @@ app = FastAPI()
 стипендии, за результаты проектной деятельности и (или) опытно-конструкторской работы'''
 
 
-@app.get('/api/educ_part/article_writers', response_model=ArticleWriter)
+@app.get('/api/educ_part/article_writers', response_model=List[ArticleWriter])
 async def get_all_article_writers():
     cur.execute('select * from article_writers')
     if cur is not None:
@@ -102,7 +103,7 @@ async def delete_article_writer(id: int):
 повышенной государственной академической стипендии, только оценок «отлично»'''
 
 
-@app.get('/api/educ_part/excellent_students', response_model=ExcellentStudent)
+@app.get('/api/educ_part/excellent_students', response_model=List[ExcellentStudent])
 async def get_all_excellent_students():
     cur.execute('select * from excellent_students')
     if cur is not None:
@@ -163,7 +164,7 @@ async def delete_excellent_student(id: int):
 предшествующего назначению повышенной государственной академической:'''
 
 
-@app.get('/api/educ_part/olympiad_winners', response_model=OlympiadWinner)
+@app.get('/api/educ_part/olympiad_winners', response_model=List[OlympiadWinner])
 async def get_all_olympiad_winners():
     cur.execute('select * from olympiad_winners')
     if cur is not None:
