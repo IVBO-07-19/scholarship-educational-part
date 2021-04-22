@@ -6,6 +6,7 @@ Hi, this is the part of scolarship project.
 2. FastApi
 3. PostgreSql
 4. FTP
+5. Auth0
 
 Список будет дополняться...
 
@@ -32,6 +33,8 @@ Hi, this is the part of scolarship project.
     # Порт
     port = 5432
 ````
+Для регистрации нужен токен: jqWYEMUy2VOU18k6IlpYHkrBoLcC5p69
+
 Для запуска сервиса, надо указать следующую команду:
 
     uvicorn main:app --reload

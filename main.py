@@ -1,10 +1,12 @@
 import configparser
+import os
 
 import psycopg2
-from fastapi import FastAPI
 from psycopg2.extras import RealDictCursor
 from typing import List
+from fastapi_auth0 import Auth0, Auth0User
 
+from fastapi import Depends, FastAPI, Security
 from appendix_models import *
 
 config = configparser.ConfigParser()
@@ -19,15 +21,42 @@ con = psycopg2.connect(
 )
 
 cur = con.cursor(cursor_factory=RealDictCursor)
+auth0_domain = os.getenv('AUTH0_DOMAIN', 'dev-d82kol56.us.auth0.com')
+auth0_api_audience = os.getenv('AUTH0_API_AUDIENCE', 'fastapi')
+
+auth = Auth0(domain=auth0_domain, api_audience=auth0_api_audience, scopes={
+    'read:blabla': 'Read BlaBla resource'
+})
 app = FastAPI()
+
+
+# @app.get("/public")
+# async def get_public():
+#     return {"message": "Anonymous user"}
+
+
+# @app.get("/secure", dependencies=[Depends(auth.implicit_scheme)])
+# async def get_secure(user: Auth0User = Security(auth.get_user)):
+#     return {"message": f"{user}"}
+
+
+# @app.get("/secure/blabla", dependencies=[Depends(auth.implicit_scheme)])
+# async def get_secure_scoped(user: Auth0User = Security(auth.get_user, scopes=["read:blabla"])):
+#     return {"message": f"{user}"}
+#
+#
+# @app.get("/secure/blabla2")
+# async def get_secure_scoped2(user: Auth0User = Security(auth.get_user, scopes=["read:blabla"])):
+#     return {"message": f"{user}"}
+
 
 '''Получатель награды (приза) в течение 1-ого года, 
 предшествующего назначению повышенной государственной академической
 стипендии, за результаты проектной деятельности и (или) опытно-конструкторской работы'''
 
 
-@app.get('/api/educ_part/article_writers', response_model=List[ArticleWriter])
-async def get_all_article_writers():
+@app.get('/api/educ_part/article_writers', response_model=List[ArticleWriter], dependencies=[Depends(auth.implicit_scheme)])
+async def get_all_article_writers(user: Auth0User = Security(auth.get_user)):
     cur.execute('select * from article_writers')
     if cur is not None:
         return cur.fetchall()
@@ -35,8 +64,8 @@ async def get_all_article_writers():
         return None
 
 
-@app.post('/api/educ_part/article_writers', response_model=ArticleWriter)
-async def create_new_article_writer(article_writer: ArticleWriter):
+@app.post('/api/educ_part/article_writers', response_model=ArticleWriter, dependencies=[Depends(auth.implicit_scheme)])
+async def create_new_article_writer(article_writer: ArticleWriter, user: Auth0User = Security(auth.get_user)):
     cur.execute('''insert into article_writers(
                     id_person,
                     event_name,
@@ -57,8 +86,8 @@ async def create_new_article_writer(article_writer: ArticleWriter):
     return article_writer
 
 
-@app.get('/api/educ_part/article_writers/{id}', response_model=ArticleWriter)
-async def get_article_writer(id: int):
+@app.get('/api/educ_part/article_writers/{id}', response_model=ArticleWriter, dependencies=[Depends(auth.implicit_scheme)])
+async def get_article_writer(id: int, user: Auth0User = Security(auth.get_user)):
     cur.execute('select * from article_writers where id=%s', [id])
     if cur is not None:
         return cur.fetchone()
@@ -66,8 +95,8 @@ async def get_article_writer(id: int):
         return None
 
 
-@app.put('/api/educ_part/article_writers/{id}', response_model=ArticleWriter)
-async def update_article_writer(id: int, article_writer: ArticleWriter):
+@app.put('/api/educ_part/article_writers/{id}', response_model=ArticleWriter, dependencies=[Depends(auth.implicit_scheme)])
+async def update_article_writer(id: int, article_writer: ArticleWriter, user: Auth0User = Security(auth.get_user)):
     cur.execute('select id_person from article_writers where id=%s', [id])
     id_person = cur.fetchone()['id_person']
     cur.execute('''update article_writers set
@@ -89,8 +118,8 @@ async def update_article_writer(id: int, article_writer: ArticleWriter):
     return article_writer
 
 
-@app.delete('/api/educ_part/article_writers/{id}', response_model=ArticleWriter)
-async def delete_article_writer(id: int):
+@app.delete('/api/educ_part/article_writers/{id}', response_model=ArticleWriter, dependencies=[Depends(auth.implicit_scheme)])
+async def delete_article_writer(id: int, user: Auth0User = Security(auth.get_user)):
     cur.execute('select * from article_writers where id=%s', [id])
     article_writer = cur.fetchone()
     cur.execute('delete from article_writers where id=%s', [id])
@@ -103,8 +132,8 @@ async def delete_article_writer(id: int):
 повышенной государственной академической стипендии, только оценок «отлично»'''
 
 
-@app.get('/api/educ_part/excellent_students', response_model=List[ExcellentStudent])
-async def get_all_excellent_students():
+@app.get('/api/educ_part/excellent_students', response_model=List[ExcellentStudent], dependencies=[Depends(auth.implicit_scheme)])
+async def get_all_excellent_students(user: Auth0User = Security(auth.get_user)):
     cur.execute('select * from excellent_students')
     if cur is not None:
         return cur.fetchall()
@@ -112,8 +141,8 @@ async def get_all_excellent_students():
         return None
 
 
-@app.post('/api/educ_part/excellent_students', response_model=ExcellentStudent)
-async def create_new_excellent_student(excellent_student: ExcellentStudent):
+@app.post('/api/educ_part/excellent_students', response_model=ExcellentStudent, dependencies=[Depends(auth.implicit_scheme)])
+async def create_new_excellent_student(excellent_student: ExcellentStudent, user: Auth0User = Security(auth.get_user)):
     cur.execute('''insert into excellent_students(id_person, excellent) 
                     values(%s,%s)''',
                 (excellent_student.id_person,
@@ -124,8 +153,8 @@ async def create_new_excellent_student(excellent_student: ExcellentStudent):
     return excellent_student
 
 
-@app.get('/api/educ_part/excellent_students/{id}', response_model=ExcellentStudent)
-async def get_excellent_student(id: int):
+@app.get('/api/educ_part/excellent_students/{id}', response_model=ExcellentStudent, dependencies=[Depends(auth.implicit_scheme)])
+async def get_excellent_student(id: int, user: Auth0User = Security(auth.get_user)):
     cur.execute('select * from excellent_students where id=%s', [id])
     if cur is not None:
         return cur.fetchone()
@@ -133,8 +162,8 @@ async def get_excellent_student(id: int):
         return None
 
 
-@app.put('/api/educ_part/excellent_students/{id}', response_model=ExcellentStudent)
-async def update_excellent_student(id: int, excellent_student: ExcellentStudent):
+@app.put('/api/educ_part/excellent_students/{id}', response_model=ExcellentStudent, dependencies=[Depends(auth.implicit_scheme)])
+async def update_excellent_student(id: int, excellent_student: ExcellentStudent, user: Auth0User = Security(auth.get_user)):
     cur.execute('select id_person from excellent_students where id=%s', [id])
     id_person = cur.fetchone()['id_person']
     cur.execute('''update excellent_students set
@@ -148,8 +177,8 @@ async def update_excellent_student(id: int, excellent_student: ExcellentStudent)
     return excellent_student
 
 
-@app.delete('/api/educ_part/excellent_students/{id}', response_model=ExcellentStudent)
-async def delete_excellent_student(id: int):
+@app.delete('/api/educ_part/excellent_students/{id}', response_model=ExcellentStudent, dependencies=[Depends(auth.implicit_scheme)])
+async def delete_excellent_student(id: int, user: Auth0User = Security(auth.get_user)):
     cur.execute('select * from excellent_students where id=%s', [id])
     excellent_student = cur.fetchone()
     cur.execute('delete from excellent_students where id=%s', [id])
@@ -164,8 +193,8 @@ async def delete_excellent_student(id: int):
 предшествующего назначению повышенной государственной академической:'''
 
 
-@app.get('/api/educ_part/olympiad_winners', response_model=List[OlympiadWinner])
-async def get_all_olympiad_winners():
+@app.get('/api/educ_part/olympiad_winners', response_model=List[OlympiadWinner], dependencies=[Depends(auth.implicit_scheme)])
+async def get_all_olympiad_winners(user: Auth0User = Security(auth.get_user)):
     cur.execute('select * from olympiad_winners')
     if cur is not None:
         return cur.fetchall()
@@ -173,8 +202,8 @@ async def get_all_olympiad_winners():
         return None
 
 
-@app.post('/api/educ_part/olympiad_winners', response_model=OlympiadWinner)
-async def create_new_olympiad_winner(olympiad_winners: OlympiadWinner):
+@app.post('/api/educ_part/olympiad_winners', response_model=OlympiadWinner, dependencies=[Depends(auth.implicit_scheme)])
+async def create_new_olympiad_winner(olympiad_winners: OlympiadWinner, user: Auth0User = Security(auth.get_user)):
     cur.execute('''insert into olympiad_winners(id_person, event_name, level, prize_place, participation, date, scores) 
                     values(%s,%s,%s,%s,%s,%s,%s)''',
                 (olympiad_winners.id_person,
@@ -190,8 +219,8 @@ async def create_new_olympiad_winner(olympiad_winners: OlympiadWinner):
     return olympiad_winners
 
 
-@app.get('/api/educ_part/olympiad_winners/{id}', response_model=OlympiadWinner)
-async def get_olympiad_winner(id: int):
+@app.get('/api/educ_part/olympiad_winners/{id}', response_model=OlympiadWinner, dependencies=[Depends(auth.implicit_scheme)])
+async def get_olympiad_winner(id: int, user: Auth0User = Security(auth.get_user)):
     cur.execute('select * from olympiad_winners where id=%s', [id])
     if cur is not None:
         return cur.fetchone()
@@ -199,8 +228,8 @@ async def get_olympiad_winner(id: int):
         return None
 
 
-@app.put('/api/educ_part/olympiad_winners/{id}', response_model=OlympiadWinner)
-async def update_olympiad_winner(id: int, olympiad_winner: OlympiadWinner):
+@app.put('/api/educ_part/olympiad_winners/{id}', response_model=OlympiadWinner, dependencies=[Depends(auth.implicit_scheme)])
+async def update_olympiad_winner(id: int, olympiad_winner: OlympiadWinner, user: Auth0User = Security(auth.get_user)):
     cur.execute('select id_person from olympiad_winners where id=%s', [id])
     id_person = cur.fetchone()['id_person']
     cur.execute('''update olympiad_winners set
@@ -224,8 +253,8 @@ async def update_olympiad_winner(id: int, olympiad_winner: OlympiadWinner):
     return olympiad_winner
 
 
-@app.delete('/api/educ_part/olympiad_winners/{id}', response_model=OlympiadWinner)
-async def delete_olympiad_winner(id: int):
+@app.delete('/api/educ_part/olympiad_winners/{id}', response_model=OlympiadWinner, dependencies=[Depends(auth.implicit_scheme)])
+async def delete_olympiad_winner(id: int, user: Auth0User = Security(auth.get_user)):
     cur.execute('select * from olympiad_winners where id=%s', [id])
     olympiad_winner = cur.fetchone()
     cur.execute('delete from olympiad_winners where id=%s', [id])
