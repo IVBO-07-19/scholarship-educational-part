@@ -24,6 +24,14 @@ jobs:
     #     flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
     #     # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
     #     flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    - name: Setup test environment
+      run: |
+        rm config.ini
+        mv config.tests.ini config.ini
+        docker run -d --rm -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 --name postgres postgres
+        sleep 15
+        docker exec -u postgres postgres psql -c 'create database edu_part_db;'
+        python create_table.py
     - name: Test with pytest
       run: |
         pytest
