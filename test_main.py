@@ -1,10 +1,8 @@
 import requests
 from fastapi.testclient import TestClient
 from main import app
-import logging
 import json
 
-logging.basicConfig(level=logging.DEBUG)
 client = TestClient(app)
 
 
@@ -28,6 +26,10 @@ def get_user_id():
 
 userId = get_user_id()
 
+def test_not_authorized():
+    response = client.get("/api/educ_part/article_writers")
+    assert response.status_code == 401 or response.status_code == 403
+
 def test_get_article_writers():
     response = client.get("/api/educ_part/article_writers", headers=auth_headers)
     assert response.status_code == 200
@@ -49,7 +51,7 @@ def test_create_article_writer_sace_user_id():
     assert type(body) is dict
     assert body['id_person'] == userId
 
-def test_create_article_writer_incorrect_place():
+def test_create_article_writer_with_incorrect_place_returns_400():
     response = client.post("/api/educ_part/article_writers", headers=auth_headers, data=json.dumps({
         "id": 0,
         "event_name": "string",

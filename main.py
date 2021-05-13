@@ -74,7 +74,7 @@ async def create_new_article_writer(article_writer: ArticleWriter, user: Auth0Us
                     date,
                     scores) 
                     values(%s,%s,%s,%s,%s,%s)''',
-                (article_writer.id_person,
+                (user.id,
                  article_writer.event_name,
                  article_writer.prize_place,
                  article_writer.participation,
@@ -83,7 +83,8 @@ async def create_new_article_writer(article_writer: ArticleWriter, user: Auth0Us
     con.commit()
     cur.execute('SELECT MAX(id) FROM article_writers WHERE id is not null')
     article_writer.id = cur.fetchone()['max']
-    return article_writer
+    cur.execute('SELECT * FROM article_writers WHERE id = %s', (article_writer.id, ))
+    return cur.fetchone()
 
 
 @app.get('/api/educ_part/article_writers/{id}', response_model=ArticleWriter, dependencies=[Depends(auth.implicit_scheme)])
