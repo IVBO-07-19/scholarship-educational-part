@@ -33,7 +33,7 @@ def test_get_article_writers():
     assert response.status_code == 200
     assert type(response.json()) is list
 
-def test_create_article_writer():
+def test_create_article_writer_sace_user_id():
     response = client.post("/api/educ_part/article_writers", headers=auth_headers, data=json.dumps({
         "id": 0,
         "id_person": "ingnore_this",
@@ -48,3 +48,15 @@ def test_create_article_writer():
     body = response.json()
     assert type(body) is dict
     assert body['id_person'] == userId
+
+def test_create_article_writer_incorrect_place():
+    response = client.post("/api/educ_part/article_writers", headers=auth_headers, data=json.dumps({
+        "id": 0,
+        "event_name": "string",
+        "prize_place": -1,
+        "participation": "string",
+        "date": "2021-05-13",
+        "scores": 0
+    }))
+
+    assert response.status_code % 100 == 4
