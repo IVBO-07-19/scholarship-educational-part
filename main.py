@@ -21,8 +21,8 @@ con = psycopg2.connect(
 )
 
 cur = con.cursor(cursor_factory=RealDictCursor)
-auth0_domain = os.getenv('AUTH0_DOMAIN', 'dev-d82kol56.us.auth0.com')
-auth0_api_audience = os.getenv('AUTH0_API_AUDIENCE', 'fastapi')
+auth0_domain = os.getenv('AUTH0_DOMAIN', 'suroegin503.eu.auth0.com')
+auth0_api_audience = os.getenv('AUTH0_API_AUDIENCE', 'https://welcome/')
 
 auth = Auth0(domain=auth0_domain, api_audience=auth0_api_audience, scopes={
     'read:blabla': 'Read BlaBla resource'
