@@ -1,6 +1,8 @@
 # Educational part of scolarship project
 Hi, this is the part of scolarship project.
 
+[![Python application](https://github.com/IVBO-07-19/scholarship-educational-part/actions/workflows/tests.yml/badge.svg)](https://github.com/IVBO-07-19/scholarship-educational-part/actions/workflows/tests.yml)
+
 Испоьзуемые технологии:
 1. Python
 2. FastApi
