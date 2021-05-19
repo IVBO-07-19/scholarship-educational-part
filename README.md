@@ -13,11 +13,9 @@ Hi, this is the part of scolarship project.
 Список будет дополняться...
 
 # Установка
-Для использования данного сервиса, вам надо выполнить следующие команды:
+Для использования данного сервиса, вам надо выполнить следующую команду:
 
-	pip install fastapi[all]
-	pip install uvicorn
-    pip install psycopg2
+	pip install -r .\requirements.txt
     
 # Запуск
 Для подключения к базе данных, надо создать файл config.ini
@@ -62,7 +60,7 @@ Answer body example
 [
   {
     "id": 1,
-    "id_person": 1,
+    "id_person": "hdj23JDSJLdas",
     "event_name": "Статья",
     "prize_place": 1,
     "participation": "Индивид",
@@ -71,7 +69,7 @@ Answer body example
   },
   {
     "id": 2,
-    "id_person": 2,
+    "id_person": "hdj23JDSJLdas",
     "event_name": "Что-то",
     "prize_place": 76,
     "participation": "Индивид",
@@ -89,7 +87,6 @@ Request body example
 
 ```json
 {
-  "id_person": 0,
   "event_name": "string",
   "prize_place": 0,
   "participation": "string",
@@ -102,7 +99,7 @@ Answer body example
 ```json
 {
   "id": 1,
-  "id_person": 0,
+  "id_person": "hdj23JDSJLdas",
   "event_name": "string",
   "prize_place": 0,
   "participation": "string",
@@ -123,7 +120,7 @@ Answer body example
 ```json
 {
   "id": 1,
-  "id_person": 1,
+  "id_person": "hdj23JDSJLdas",
   "event_name": "Мероприятие",
   "prize_place": 56,
   "participation": "Индивид",
@@ -151,7 +148,7 @@ Answer body example
 ```json
 {
   "id": 1,
-  "id_person": 1,
+  "id_person": "hdj23JDSJLdas",
   "event_name": "string",
   "prize_place": 0,
   "participation": "string",
@@ -171,7 +168,7 @@ Answer body example
 ```json
 {
   "id": 1,
-  "id_person": 1,
+  "id_person": "hdj23JDSJLdas",
   "event_name": "string",
   "prize_place": 0,
   "participation": "string",
@@ -198,12 +195,12 @@ Answer body example
 [
   {
     "id": 1,
-    "id_person": 3,
+    "id_person": "hdj23JDSJLdas",
     "is_excellent": true
   },
   {
     "id": 2,
-    "id_person": 2,
+    "id_person": "hdj23JDSJLdas",
     "is_excellent": true
   }
 ]
@@ -216,7 +213,6 @@ Endpoint: /api/educ_part/excellent_students
 Request body example
 ```json
 {
-  "id_person": 1,
   "is_excellent": true
 }
 ```
@@ -225,7 +221,7 @@ Answer body example
 ```json
 {
   "id": 1,
-  "id_person": 1,
+  "id_person": "hdj23JDSJLdas",
   "is_excellent": true
 }
 ```
@@ -241,7 +237,7 @@ Answer body example
 ```json
 {
   "id": 1,
-  "id_person": 2,
+  "id_person": "hdj23JDSJLdas",
   "excellent": true
 }
 ```
@@ -261,7 +257,7 @@ Answer body example
 ```json
 {
   "id": 1,
-  "id_person": 2,
+  "id_person": "hdj23JDSJLdas",
   "excellent": false
 }
 ```
@@ -277,7 +273,7 @@ Answer body example
 ```json
 {
   "id": 1,
-  "id_person": 2,
+  "id_person": "hdj23JDSJLdas",
   "excellent": false
 }
 ```
@@ -299,7 +295,7 @@ Answer body example
 [
   {
     "id": 1,
-    "id_person": 3,
+    "id_person": "hdj23JDSJLdas",
     "event_name": "Олимпиада",
     "level": "Мировой",
     "prize_place": 1,
@@ -309,7 +305,7 @@ Answer body example
   },
   {
     "id": 2,
-    "id_person": 2,
+    "id_person": "hdj23JDSJLdas",
     "event_name": "Физтех",
     "level": "Мировой",
     "prize_place": 35,
@@ -327,7 +323,6 @@ Endpoint: /api/educ_part/olympiad_winners
 Request body example
 ```json
 {
-  "id_person": 2,
   "event_name": "Event",
   "level": "first",
   "prize_place": 56,
@@ -341,7 +336,7 @@ Answer body example
 ```json
 {
   "id": 4,
-  "id_person": 2,
+  "id_person": "hdj23JDSJLdas",
   "event_name": "Event",
   "level": "first",
   "prize_place": 56,
@@ -362,7 +357,7 @@ Answer body example
 ```json
 {
   "id": 2,
-  "id_person": 2,
+  "id_person": "hdj23JDSJLdas",
   "event_name": "Физтех",
   "level": "Мировой",
   "prize_place": 35,
@@ -392,7 +387,7 @@ Answer body example
 ```json
 {
   "id": 2,
-  "id_person": 2,
+  "id_person": "hdj23JDSJLdas",
   "event_name": "string",
   "level": "string",
   "prize_place": 0,
@@ -413,7 +408,7 @@ Answer body example
 ```json
 {
   "id": 2,
-  "id_person": 2,
+  "id_person": "hdj23JDSJLdas",
   "event_name": "string",
   "level": "string",
   "prize_place": 0,
