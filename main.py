@@ -72,7 +72,7 @@ async def create_new_article_writer(response: Response,
         con.commit()
         tmp_id = cur.fetchone()['id']
         cur.execute('SELECT * FROM article_writers WHERE id = %s', (tmp_id,))
-        response.status_code = status.HTTP_201_CREATED
+        response.status_code = status.HTTP_200_OK
         return cur.fetchone()
     else:
         response.status_code = status.HTTP_400_BAD_REQUEST
@@ -82,9 +82,9 @@ async def create_new_article_writer(response: Response,
 @app.get('/api/educ_part/article_writers/{id}', response_model=ArticleWriter,
          dependencies=[Depends(auth.implicit_scheme)])
 async def get_article_writer(response: Response,
-                             tmp_id: int,
+                             id: int,
                              user: Auth0User = Security(auth.get_user)):
-    cur.execute('select * from article_writers where id=%s', [tmp_id])
+    cur.execute('select * from article_writers where id=%s', [id])
     tmp_dict = cur.fetchone()
     if tmp_dict is not None:
         response.status_code = status.HTTP_200_OK
@@ -160,7 +160,7 @@ async def get_all_excellent_students(user: Auth0User = Security(auth.get_user)):
 
 
 @app.post('/api/educ_part/excellent_students', response_model=ExcellentStudent,
-          dependencies=[Depends(auth.implicit_scheme)])
+          dependencies=[Depends(auth.implicit_scheme)], status_code=status.HTTP_200_OK)
 async def create_new_excellent_student(excellent_student: ExcellentStudent, user: Auth0User = Security(auth.get_user)):
     cur.execute('''insert into excellent_students(id_person, excellent) 
                     values(%s,%s) returning id''',
@@ -264,7 +264,7 @@ async def create_new_olympiad_winner(response: Response,
         con.commit()
         tmp_id = cur.fetchone()['id']
         cur.execute('SELECT * FROM olympiad_winners WHERE id = %s', (tmp_id,))
-        response.status_code = status.HTTP_201_CREATED
+        response.status_code = status.HTTP_200_OK
         return cur.fetchone()
     else:
         response.status_code = status.HTTP_400_BAD_REQUEST

@@ -66,7 +66,7 @@ def test_create_article_writer_user_id():
         "scores": 0
     }))
 
-    assert response.status_code == 201
+    assert response.status_code == 200
     body = response.json()
     assert type(body) is dict
     assert body['id_person'] == userId
@@ -79,7 +79,7 @@ def test_create_excellent_student_user_id():
         "excellent": True
     }))
 
-    assert response.status_code == 201
+    assert response.status_code == 200
     body = response.json()
     assert type(body) is dict
     assert body['id_person'] == userId
@@ -97,7 +97,7 @@ def test_create_olympiad_winners_user_id():
         "scores": 32124.23
     }))
 
-    assert response.status_code == 201
+    assert response.status_code == 200
     body = response.json()
     assert type(body) is dict
     assert body['id_person'] == userId
