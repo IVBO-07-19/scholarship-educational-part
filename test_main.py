@@ -76,7 +76,7 @@ def test_create_excellent_student_user_id():
     response = client.post("/api/educ_part/excellent_students", headers=auth_headers, data=json.dumps({
         "id": 0,
         "id_person": "ingnore_this",
-        "is_excellent": True
+        "excellent": True
     }))
 
     assert response.status_code == 201

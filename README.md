@@ -196,12 +196,12 @@ Answer body example
   {
     "id": 1,
     "id_person": "hdj23JDSJLdas",
-    "is_excellent": true
+    "excellent": true
   },
   {
     "id": 2,
     "id_person": "hdj23JDSJLdas",
-    "is_excellent": true
+    "excellent": true
   }
 ]
 ```
@@ -213,7 +213,7 @@ Endpoint: /api/educ_part/excellent_students
 Request body example
 ```json
 {
-  "is_excellent": true
+  "excellent": true
 }
 ```
 
@@ -222,7 +222,7 @@ Answer body example
 {
   "id": 1,
   "id_person": "hdj23JDSJLdas",
-  "is_excellent": true
+  "excellent": true
 }
 ```
 
