@@ -12,6 +12,34 @@ Hi, this is the part of scolarship project.
 
 Список будет дополняться...
 
+### Запросы
+* #### Article Writers
+> * id_person - [String] - идентификатор пользователя
+> * event_name - [String] - название мероприятия  
+> * prize_place - [Integer] - место в мероприятии  
+> * participation - [String] - степень участия
+> * date - [Date] - дата мероприятия (гггг.мм.дд)
+> * scores - [Integer] - Количество очков
+
+URL: https://brigada2.herokuapp.com/api/educ_part/article_writers/
+
+* #### Excellent Students
+> * id_person - [String] - идентификатор пользователя
+> * excellent - [Boolean] - отличник ли 
+
+URL: https://brigada2.herokuapp.com/api/educ_part/excellent_students/
+
+* #### Olympiad Winners
+> * id_person - [String] - идентификатор пользователя
+> * event_name - [String] - название мероприятия
+> * level - [String] - уровень мероприятия    
+> * prize_place - [Integer] - место в мероприятии  
+> * participation - [String] - степень участия
+> * date - [Date] - дата мероприятия (гггг.мм.дд)
+> * scores - [Integer] - Количество очков
+
+URL: https://brigada2.herokuapp.com/api/educ_part/olympiad_winners/
+
 # Установка
 Для использования данного сервиса, вам надо выполнить следующую команду:
 
