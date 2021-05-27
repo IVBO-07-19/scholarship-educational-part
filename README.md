@@ -61,7 +61,7 @@ URL: https://brigada2.herokuapp.com/api/educ_part/olympiad_winners/
     # Порт
     port = 5432
 ````
-Для регистрации нужен токен: jqWYEMUy2VOU18k6IlpYHkrBoLcC5p69
+Для регистрации нужен токен: PdkS09Ig0EYVGK9KPYwncjKMGzXnAasI
 
 Для запуска сервиса, надо указать следующую команду:
 
