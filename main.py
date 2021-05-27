@@ -6,6 +6,7 @@ import psycopg2
 from fastapi import Depends, FastAPI, Security, Response, status
 from fastapi_auth0 import Auth0, Auth0User
 from psycopg2.extras import RealDictCursor
+import requests
 
 from appendix_models import *
 
@@ -29,6 +30,23 @@ auth = Auth0(domain=auth0_domain, api_audience=auth0_api_audience, scopes={
 })
 
 app = FastAPI()
+
+
+def get_access_token():
+    r = requests.post('https://suroegin503.eu.auth0.com/oauth/token', data={
+        'grant_type': 'password',
+        'username': 'student@mirea.ru',
+        'password': '123',
+        'scope': 'openid profile email',
+        'audience': 'https://welcome/',
+        'client_id': 'PdkS09Ig0EYVGK9KPYwncjKMGzXnAasI',
+        'client_secret': '--OuOrb1541ddztN17yBA_yMuy_Ekrc-NikGijgqgtMd9kRvAI6dmMkpvqXOGuSX'})
+    return r.json()['access_token']
+
+
+token = get_access_token()
+
+auth_headers = {'Authorization': f'Bearer {token}'}
 
 
 def check_prize_place(place: int) -> bool:
@@ -55,7 +73,9 @@ async def create_new_article_writer(response: Response,
                                     article_writer: ArticleWriter,
                                     user: Auth0User = Security(auth.get_user)):
     if check_prize_place(article_writer.prize_place):
-        cur.execute('''insert into article_writers(
+        response = requests.get("https://secure-gorge-99048.herokuapp.com/api/application/last/", headers=auth_headers)
+        if (response.json()['status']):
+            cur.execute('''insert into article_writers(
                     id_person,
                     event_name,
                     prize_place,
@@ -63,17 +83,17 @@ async def create_new_article_writer(response: Response,
                     date,
                     scores) 
                     values(%s,%s,%s,%s,%s,%s) returning id''',
-                    (user.id,
-                     article_writer.event_name,
-                     article_writer.prize_place,
-                     article_writer.participation,
-                     article_writer.date,
-                     article_writer.scores))
-        con.commit()
-        tmp_id = cur.fetchone()['id']
-        cur.execute('SELECT * FROM article_writers WHERE id = %s', (tmp_id,))
-        response.status_code = status.HTTP_200_OK
-        return cur.fetchone()
+                        (user.id,
+                         article_writer.event_name,
+                         article_writer.prize_place,
+                         article_writer.participation,
+                         article_writer.date,
+                         article_writer.scores))
+            con.commit()
+            tmp_id = cur.fetchone()['id']
+            cur.execute('SELECT * FROM article_writers WHERE id = %s', (tmp_id,))
+            response.status_code = status.HTTP_200_OK
+            return cur.fetchone()
     else:
         response.status_code = status.HTTP_400_BAD_REQUEST
         return None
@@ -103,25 +123,27 @@ async def update_article_writer(response: Response,
     cur.execute('select * from article_writers where id=%s', [id])
     tmp_dict = cur.fetchone()
     if check_prize_place(article_writer.prize_place) and tmp_dict is not None:
-        cur.execute('''update article_writers set
+        response = requests.get("https://secure-gorge-99048.herokuapp.com/api/application/last/", headers=auth_headers)
+        if (response.json()['status']):
+            cur.execute('''update article_writers set
             event_name = %s,
             prize_place = %s,
             participation = %s,
             date = %s,
             scores = %s
             where id = %s returning id, id_person''', (
-            article_writer.event_name,
-            article_writer.prize_place,
-            article_writer.participation,
-            article_writer.date,
-            article_writer.scores,
-            id))
-        con.commit()
-        tmp_dict = cur.fetchone()
-        article_writer.id = tmp_dict['id']
-        article_writer.id_person = tmp_dict['id_person']
-        response.status_code = status.HTTP_200_OK
-        return article_writer
+                article_writer.event_name,
+                article_writer.prize_place,
+                article_writer.participation,
+                article_writer.date,
+                article_writer.scores,
+                id))
+            con.commit()
+            tmp_dict = cur.fetchone()
+            article_writer.id = tmp_dict['id']
+            article_writer.id_person = tmp_dict['id_person']
+            response.status_code = status.HTTP_200_OK
+            return article_writer
     else:
         response.status_code = status.HTTP_400_BAD_REQUEST
         return None
@@ -162,14 +184,16 @@ async def get_all_excellent_students(user: Auth0User = Security(auth.get_user)):
 @app.post('/api/educ_part/excellent_students', response_model=ExcellentStudent,
           dependencies=[Depends(auth.implicit_scheme)], status_code=status.HTTP_200_OK)
 async def create_new_excellent_student(excellent_student: ExcellentStudent, user: Auth0User = Security(auth.get_user)):
-    cur.execute('''insert into excellent_students(id_person, excellent) 
-                    values(%s,%s) returning id''',
-                (user.id,
-                 excellent_student.excellent))
-    con.commit()
-    tmp_id = cur.fetchone()['id']
-    cur.execute('SELECT * FROM excellent_students WHERE id = %s', (tmp_id,))
-    return cur.fetchone()
+    response = requests.get("https://secure-gorge-99048.herokuapp.com/api/application/last/", headers=auth_headers)
+    if (response.json()['status']):
+        cur.execute('''insert into excellent_students(id_person, excellent) 
+         values(%s,%s) returning id''',
+                    (user.id,
+                     excellent_student.excellent))
+        con.commit()
+        tmp_id = cur.fetchone()['id']
+        cur.execute('SELECT * FROM excellent_students WHERE id = %s', (tmp_id,))
+        return cur.fetchone()
 
 
 @app.get('/api/educ_part/excellent_students/{id}', response_model=ExcellentStudent,
@@ -193,20 +217,22 @@ async def update_excellent_student(response: Response,
                                    id: int,
                                    excellent_student: ExcellentStudent,
                                    user: Auth0User = Security(auth.get_user)):
-    cur.execute('select * from excellent_students where id=%s', [id])
-    tmp_dict = cur.fetchone()
-    if tmp_dict is not None:
-        cur.execute('''update excellent_students set
+    response = requests.get("https://secure-gorge-99048.herokuapp.com/api/application/last/", headers=auth_headers)
+    if (response.json()['status']):
+        cur.execute('select * from excellent_students where id=%s', [id])
+        tmp_dict = cur.fetchone()
+        if tmp_dict is not None:
+            cur.execute('''update excellent_students set
             excellent = %s
             where id = %s returning id, id_person''', (
             excellent_student.excellent,
             id))
-        con.commit()
-        tmp_dict = cur.fetchone()
-        excellent_student.id = tmp_dict['id']
-        excellent_student.id_person = tmp_dict['id_person']
-        response.status_code = status.HTTP_200_OK
-        return excellent_student
+            con.commit()
+            tmp_dict = cur.fetchone()
+            excellent_student.id = tmp_dict['id']
+            excellent_student.id_person = tmp_dict['id_person']
+            response.status_code = status.HTTP_200_OK
+            return excellent_student
     else:
         response.status_code = status.HTTP_400_BAD_REQUEST
         return None
@@ -252,7 +278,9 @@ async def create_new_olympiad_winner(response: Response,
                                      olympiad_winners: OlympiadWinner,
                                      user: Auth0User = Security(auth.get_user)):
     if check_prize_place(olympiad_winners.prize_place):
-        cur.execute('''insert into olympiad_winners(id_person, event_name, level, prize_place, participation, date, scores) 
+        response = requests.get("https://secure-gorge-99048.herokuapp.com/api/application/last/", headers=auth_headers)
+        if (response.json()['status']):
+            cur.execute('''insert into olympiad_winners(id_person, event_name, level, prize_place, participation, date, scores) 
                     values(%s,%s,%s,%s,%s,%s,%s) returning id''',
                     (user.id,
                      olympiad_winners.event_name,
@@ -261,11 +289,11 @@ async def create_new_olympiad_winner(response: Response,
                      olympiad_winners.participation,
                      olympiad_winners.date,
                      olympiad_winners.scores))
-        con.commit()
-        tmp_id = cur.fetchone()['id']
-        cur.execute('SELECT * FROM olympiad_winners WHERE id = %s', (tmp_id,))
-        response.status_code = status.HTTP_200_OK
-        return cur.fetchone()
+            con.commit()
+            tmp_id = cur.fetchone()['id']
+            cur.execute('SELECT * FROM olympiad_winners WHERE id = %s', (tmp_id,))
+            response.status_code = status.HTTP_200_OK
+            return cur.fetchone()
     else:
         response.status_code = status.HTTP_400_BAD_REQUEST
         return None
@@ -292,10 +320,12 @@ async def update_olympiad_winner(response: Response,
                                  id: int,
                                  olympiad_winner: OlympiadWinner,
                                  user: Auth0User = Security(auth.get_user)):
-    cur.execute('select * from olympiad_winners where id=%s', [id])
-    tmp_dict = cur.fetchone()
-    if check_prize_place(olympiad_winner.prize_place) and tmp_dict is not None:
-        cur.execute('''update olympiad_winners set
+    response = requests.get("https://secure-gorge-99048.herokuapp.com/api/application/last/", headers=auth_headers)
+    if (response.json()['status']):
+        cur.execute('select * from olympiad_winners where id=%s', [id])
+        tmp_dict = cur.fetchone()
+        if check_prize_place(olympiad_winner.prize_place) and tmp_dict is not None:
+            cur.execute('''update olympiad_winners set
             event_name = %s,
             level = %s,
             prize_place = %s,
@@ -310,12 +340,12 @@ async def update_olympiad_winner(response: Response,
             olympiad_winner.date,
             olympiad_winner.scores,
             id))
-        con.commit()
-        tmp_dict = cur.fetchone()
-        olympiad_winner.id = tmp_dict['id']
-        olympiad_winner.id_person = tmp_dict['id_person']
-        response.status_code = status.HTTP_200_OK
-        return olympiad_winner
+            con.commit()
+            tmp_dict = cur.fetchone()
+            olympiad_winner.id = tmp_dict['id']
+            olympiad_winner.id_person = tmp_dict['id_person']
+            response.status_code = status.HTTP_200_OK
+            return olympiad_winner
     else:
         response.status_code = status.HTTP_400_BAD_REQUEST
         return None
