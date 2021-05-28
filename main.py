@@ -3,7 +3,7 @@ import os
 from typing import List
 
 import psycopg2
-from fastapi import Depends, FastAPI, Security, Response, status
+from fastapi import Depends, FastAPI, Security, Response, status, Request
 from fastapi_auth0 import Auth0, Auth0User
 from psycopg2.extras import RealDictCursor
 import requests
@@ -32,23 +32,6 @@ auth = Auth0(domain=auth0_domain, api_audience=auth0_api_audience, scopes={
 app = FastAPI()
 
 
-def get_access_token():
-    r = requests.post('https://suroegin503.eu.auth0.com/oauth/token', data={
-        'grant_type': 'password',
-        'username': 'student@mirea.ru',
-        'password': '123',
-        'scope': 'openid profile email',
-        'audience': 'https://welcome/',
-        'client_id': 'PdkS09Ig0EYVGK9KPYwncjKMGzXnAasI',
-        'client_secret': '--OuOrb1541ddztN17yBA_yMuy_Ekrc-NikGijgqgtMd9kRvAI6dmMkpvqXOGuSX'})
-    return r.json()['access_token']
-
-
-token = get_access_token()
-
-auth_headers = {'Authorization': f'Bearer {token}'}
-
-
 def check_prize_place(place: int) -> bool:
     return True if place > 0 else False
 
@@ -69,21 +52,26 @@ async def get_all_article_writers(user: Auth0User = Security(auth.get_user)):
 
 
 @app.post('/api/educ_part/article_writers', response_model=ArticleWriter, dependencies=[Depends(auth.implicit_scheme)])
-async def create_new_article_writer(response: Response,
+async def create_new_article_writer(request: Request,
+                                    response: Response,
                                     article_writer: ArticleWriter,
                                     user: Auth0User = Security(auth.get_user)):
     if check_prize_place(article_writer.prize_place):
+        token = request.headers['Authorization']
+        auth_headers = {'Authorization': f'{token}'}
         response = requests.get("https://secure-gorge-99048.herokuapp.com/api/application/last/", headers=auth_headers)
-        if (response.json()['status']):
+        if type(response.json()['status']):
             cur.execute('''insert into article_writers(
+                    id_application,
                     id_person,
                     event_name,
                     prize_place,
                     participation,
                     date,
                     scores) 
-                    values(%s,%s,%s,%s,%s,%s) returning id''',
-                        (user.id,
+                    values(%s,%s,%s,%s,%s,%s,%s) returning id''',
+                        (response.json()['id'],
+                         user.id,
                          article_writer.event_name,
                          article_writer.prize_place,
                          article_writer.participation,
@@ -116,15 +104,18 @@ async def get_article_writer(response: Response,
 
 @app.put('/api/educ_part/article_writers/{id}', response_model=ArticleWriter,
          dependencies=[Depends(auth.implicit_scheme)])
-async def update_article_writer(response: Response,
+async def update_article_writer(request: Request,
+                                response: Response,
                                 id: int,
                                 article_writer: ArticleWriter,
                                 user: Auth0User = Security(auth.get_user)):
     cur.execute('select * from article_writers where id=%s', [id])
     tmp_dict = cur.fetchone()
     if check_prize_place(article_writer.prize_place) and tmp_dict is not None:
+        token = request.headers['Authorization']
+        auth_headers = {'Authorization': f'{token}'}
         response = requests.get("https://secure-gorge-99048.herokuapp.com/api/application/last/", headers=auth_headers)
-        if (response.json()['status']):
+        if type(response.json()['status']):
             cur.execute('''update article_writers set
             event_name = %s,
             prize_place = %s,
@@ -183,12 +174,15 @@ async def get_all_excellent_students(user: Auth0User = Security(auth.get_user)):
 
 @app.post('/api/educ_part/excellent_students', response_model=ExcellentStudent,
           dependencies=[Depends(auth.implicit_scheme)], status_code=status.HTTP_200_OK)
-async def create_new_excellent_student(excellent_student: ExcellentStudent, user: Auth0User = Security(auth.get_user)):
+async def create_new_excellent_student(request: Request, excellent_student: ExcellentStudent, user: Auth0User = Security(auth.get_user)):
+    token = request.headers['Authorization']
+    auth_headers = {'Authorization': f'{token}'}
     response = requests.get("https://secure-gorge-99048.herokuapp.com/api/application/last/", headers=auth_headers)
-    if (response.json()['status']):
-        cur.execute('''insert into excellent_students(id_person, excellent) 
-         values(%s,%s) returning id''',
-                    (user.id,
+    if type(response.json()['status']):
+        cur.execute('''insert into excellent_students(id_application, id_person, excellent) 
+         values(%s,%s,%s) returning id''',
+                    (response.json()['id'],
+                     user.id,
                      excellent_student.excellent))
         con.commit()
         tmp_id = cur.fetchone()['id']
@@ -213,20 +207,23 @@ async def get_excellent_student(response: Response,
 
 @app.put('/api/educ_part/excellent_students/{id}', response_model=ExcellentStudent,
          dependencies=[Depends(auth.implicit_scheme)])
-async def update_excellent_student(response: Response,
+async def update_excellent_student(request: Request,
+                                   response: Response,
                                    id: int,
                                    excellent_student: ExcellentStudent,
                                    user: Auth0User = Security(auth.get_user)):
+    token = request.headers['Authorization']
+    auth_headers = {'Authorization': f'{token}'}
     response = requests.get("https://secure-gorge-99048.herokuapp.com/api/application/last/", headers=auth_headers)
-    if (response.json()['status']):
+    if type(response.json()['status']):
         cur.execute('select * from excellent_students where id=%s', [id])
         tmp_dict = cur.fetchone()
         if tmp_dict is not None:
             cur.execute('''update excellent_students set
             excellent = %s
             where id = %s returning id, id_person''', (
-            excellent_student.excellent,
-            id))
+                excellent_student.excellent,
+                id))
             con.commit()
             tmp_dict = cur.fetchone()
             excellent_student.id = tmp_dict['id']
@@ -274,21 +271,25 @@ async def get_all_olympiad_winners(user: Auth0User = Security(auth.get_user)):
 
 @app.post('/api/educ_part/olympiad_winners', response_model=OlympiadWinner,
           dependencies=[Depends(auth.implicit_scheme)])
-async def create_new_olympiad_winner(response: Response,
+async def create_new_olympiad_winner(request: Request,
+                                     response: Response,
                                      olympiad_winners: OlympiadWinner,
                                      user: Auth0User = Security(auth.get_user)):
     if check_prize_place(olympiad_winners.prize_place):
+        token = request.headers['Authorization']
+        auth_headers = {'Authorization': f'{token}'}
         response = requests.get("https://secure-gorge-99048.herokuapp.com/api/application/last/", headers=auth_headers)
-        if (response.json()['status']):
-            cur.execute('''insert into olympiad_winners(id_person, event_name, level, prize_place, participation, date, scores) 
-                    values(%s,%s,%s,%s,%s,%s,%s) returning id''',
-                    (user.id,
-                     olympiad_winners.event_name,
-                     olympiad_winners.level,
-                     olympiad_winners.prize_place,
-                     olympiad_winners.participation,
-                     olympiad_winners.date,
-                     olympiad_winners.scores))
+        if type(response.json()['status']):
+            cur.execute('''insert into olympiad_winners(id_application, id_person, event_name, level, prize_place, 
+            participation, date, scores) values(%s,%s,%s,%s,%s,%s,%s,%s) returning id''',
+                        (response.json()['id'],
+                         user.id,
+                         olympiad_winners.event_name,
+                         olympiad_winners.level,
+                         olympiad_winners.prize_place,
+                         olympiad_winners.participation,
+                         olympiad_winners.date,
+                         olympiad_winners.scores))
             con.commit()
             tmp_id = cur.fetchone()['id']
             cur.execute('SELECT * FROM olympiad_winners WHERE id = %s', (tmp_id,))
@@ -316,12 +317,15 @@ async def get_olympiad_winner(response: Response,
 
 @app.put('/api/educ_part/olympiad_winners/{id}', response_model=OlympiadWinner,
          dependencies=[Depends(auth.implicit_scheme)])
-async def update_olympiad_winner(response: Response,
+async def update_olympiad_winner(request: Request,
+                                 response: Response,
                                  id: int,
                                  olympiad_winner: OlympiadWinner,
                                  user: Auth0User = Security(auth.get_user)):
+    token = request.headers['Authorization']
+    auth_headers = {'Authorization': f'{token}'}
     response = requests.get("https://secure-gorge-99048.herokuapp.com/api/application/last/", headers=auth_headers)
-    if (response.json()['status']):
+    if type(response.json()['status']):
         cur.execute('select * from olympiad_winners where id=%s', [id])
         tmp_dict = cur.fetchone()
         if check_prize_place(olympiad_winner.prize_place) and tmp_dict is not None:
@@ -333,13 +337,13 @@ async def update_olympiad_winner(response: Response,
             date = %s,
             scores = %s
             where id = %s returning id, id_person''', (
-            olympiad_winner.event_name,
-            olympiad_winner.level,
-            olympiad_winner.prize_place,
-            olympiad_winner.participation,
-            olympiad_winner.date,
-            olympiad_winner.scores,
-            id))
+                olympiad_winner.event_name,
+                olympiad_winner.level,
+                olympiad_winner.prize_place,
+                olympiad_winner.participation,
+                olympiad_winner.date,
+                olympiad_winner.scores,
+                id))
             con.commit()
             tmp_dict = cur.fetchone()
             olympiad_winner.id = tmp_dict['id']
