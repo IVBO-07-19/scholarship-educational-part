@@ -12,8 +12,8 @@ client = TestClient(app)
 def get_access_token():
     r = requests.post('https://suroegin503.eu.auth0.com/oauth/token', data={
         'grant_type': 'password',
-        'username': 'testingemail@gmail.com',
-        'password': 'TestPassword1_',
+        'username': 'student@mirea.ru',
+        'password': '123',
         'scope': 'openid profile email',
         'audience': 'https://welcome/',
         'client_id': 'PdkS09Ig0EYVGK9KPYwncjKMGzXnAasI'})
@@ -52,6 +52,7 @@ def test_get_article_writers():
 def test_create_article_writer_user_id():
     response = client.post("/api/educ_part/article_writers", headers=auth_headers, data=json.dumps({
         "id": 0,
+        "id_application": 123,
         "id_person": "ingnore_this",
         "event_name": "string",
         "prize_place": 1,
@@ -91,6 +92,7 @@ def test_get_article_writer_with_incorrect_id():
 def test_get_article_writers_with_id():
     response = client.post("/api/educ_part/article_writers", headers=auth_headers, data=json.dumps({
         "id": 0,
+        "id_application": 123,
         "event_name": "string",
         "prize_place": 2,
         "participation": "string",
@@ -110,6 +112,7 @@ def test_delete_article_writers_with_incorrect_id():
 def test_delete_article_writers():
     response = client.post("/api/educ_part/article_writers", headers=auth_headers, data=json.dumps({
         "id": 0,
+        "id_application": 123,
         "event_name": "string",
         "prize_place": 2,
         "participation": "string",
@@ -128,6 +131,7 @@ def test_delete_article_writers():
 def test_update_article_writer_with_correct_id():
     response = client.post("/api/educ_part/article_writers", headers=auth_headers, data=json.dumps({
         "id": 0,
+        "id_application": 123,
         "event_name": "string",
         "prize_place": 2,
         "participation": "string",
@@ -137,6 +141,7 @@ def test_update_article_writer_with_correct_id():
     tmp_id = response.json()['id']
     assert response.status_code // 100 == 2
     response = client.put("/api/educ_part/article_writers/" + str(tmp_id), headers=auth_headers, data=json.dumps({
+        "id_application": 123,
         "event_name": "who",
         "prize_place": 6,
         "participation": "where",
@@ -164,6 +169,7 @@ def test_get_excellent_students():
 def test_create_excellent_student_user_id():
     response = client.post("/api/educ_part/excellent_students", headers=auth_headers, data=json.dumps({
         "id": 0,
+        "id_application": 123,
         "id_person": "ingnore_this",
         "excellent": True
     }))
@@ -183,6 +189,7 @@ def test_get_excellent_students_with_incorrect_id():
 def test_get_excellent_students_with_id():
     response = client.post("/api/educ_part/excellent_students", headers=auth_headers, data=json.dumps({
         "id": 0,
+        "id_application": 123,
         "id_person": "ingnore_this",
         "excellent": True
     }))
@@ -199,6 +206,7 @@ def test_delete_excellent_students_with_incorrect_id():
 def test_delete_excellent_students():
     response = client.post("/api/educ_part/excellent_students", headers=auth_headers, data=json.dumps({
         "id": 0,
+        "id_application": 123,
         "id_person": "ingnore_this",
         "excellent": True
     }))
@@ -214,6 +222,7 @@ def test_delete_excellent_students():
 def test_update_excellent_student_with_correct_id():
     response = client.post("/api/educ_part/excellent_students", headers=auth_headers, data=json.dumps({
         "id": 0,
+        "id_application": 123,
         "id_person": "string",
         "excellent": True
     }))
@@ -221,6 +230,7 @@ def test_update_excellent_student_with_correct_id():
     assert response.status_code // 100 == 2
     response = client.put("/api/educ_part/excellent_students/" + str(tmp_id), headers=auth_headers, data=json.dumps({
         "id": 0,
+        "id_application": 123,
         "id_person": "string",
         "excellent": False
     }))
@@ -243,6 +253,7 @@ def test_get_olympiad_winners():
 def test_create_olympiad_winners_user_id():
     response = client.post("/api/educ_part/olympiad_winners", headers=auth_headers, data=json.dumps({
         "id": 1,
+        "id_application": 123,
         "id_person": "hdj23JDSJLdas",
         "event_name": "Олимпиада",
         "level": "Мировой",
@@ -285,6 +296,7 @@ def test_get_olympiad_winners_with_incorrect_id():
 def test_get_olympiad_winners_with_id():
     response = client.post("/api/educ_part/olympiad_winners", headers=auth_headers, data=json.dumps({
         "id": 1,
+        "id_application": 123,
         "id_person": "hdj23JDSJLdas",
         "event_name": "Олимпиада",
         "level": "Мировой",
@@ -306,6 +318,7 @@ def test_delete_olympiad_winners_with_incorrect_id():
 def test_delete_olympiad_winners():
     response = client.post("/api/educ_part/olympiad_winners", headers=auth_headers, data=json.dumps({
         "id": 1,
+        "id_application": 123,
         "id_person": "hdj23JDSJLdas",
         "event_name": "Олимпиада",
         "level": "Мировой",
@@ -326,6 +339,7 @@ def test_delete_olympiad_winners():
 def test_update_olympiad_winners_with_correct_id():
     response = client.post("/api/educ_part/olympiad_winners", headers=auth_headers, data=json.dumps({
         "id": 0,
+        "id_application": 123,
         "id_person": "string",
         "event_name": "string",
         "level": "string",
@@ -337,6 +351,7 @@ def test_update_olympiad_winners_with_correct_id():
     tmp_id = response.json()['id']
     assert response.status_code // 100 == 2
     response = client.put("/api/educ_part/olympiad_winners/" + str(tmp_id), headers=auth_headers, data=json.dumps({
+        "id_application": 123,
         "event_name": "some_event",
         "level": "some_level",
         "prize_place": 4,
