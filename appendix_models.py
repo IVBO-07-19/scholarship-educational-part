@@ -44,5 +44,4 @@ class OlympiadWinner(BaseModel):
     date: date
     scores: float = 0.0
 
-
 __all__ = ["ArticleWriter", "ExcellentStudent", "OlympiadWinner"]

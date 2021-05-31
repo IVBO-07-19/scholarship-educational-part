@@ -175,7 +175,8 @@ async def get_all_excellent_students(user: Auth0User = Security(auth.get_user)):
 
 @app.post('/api/educ_part/excellent_students', response_model=ExcellentStudent,
           dependencies=[Depends(auth.implicit_scheme)], status_code=status.HTTP_200_OK)
-async def create_new_excellent_student(request: Request, excellent_student: ExcellentStudent, user: Auth0User = Security(auth.get_user)):
+async def create_new_excellent_student(request: Request, excellent_student: ExcellentStudent,
+                                       user: Auth0User = Security(auth.get_user)):
     token = request.headers['Authorization']
     auth_headers = {'Authorization': f'{token}'}
     response = requests.get("https://secure-gorge-99048.herokuapp.com/api/application/last/", headers=auth_headers)
@@ -373,3 +374,19 @@ async def delete_olympiad_winner(response: Response,
     else:
         response.status_code = status.HTTP_400_BAD_REQUEST
         return None
+
+
+@app.get('/api/educ_part/application/{id}', response_model=OlympiadWinner,
+         dependencies=[Depends(auth.implicit_scheme)])
+def get_achievements_by_application_id(request: Request,
+                                      response: Response,
+                                      user: Auth0User = Security(auth.get_user)):
+    token = request.headers['Authorization']
+    auth_headers = {'Authorization': f'{token}'}
+    response = requests.get("https://secure-gorge-99048.herokuapp.com/api/application/last/", headers=auth_headers)
+    application_id = response.json()['id']
+    cur.execute("SELECT * FROM article_writers, olympiad_winners, excellent_students "
+                "WHERE article_writers.id_application = %s "
+                "and olympiad_winners.id_application = %s "
+                "and excellent_students .id_application = %s", (application_id, application_id, application_id))
+    return cur.fetchall()
