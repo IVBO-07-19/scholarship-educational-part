@@ -134,6 +134,7 @@ async def update_article_writer(request: Request,
             article_writer.id = tmp_dict['id']
             article_writer.id_person = tmp_dict['id_person']
             response.status_code = status.HTTP_200_OK
+            article_writer.id_application = response.json()['id']
             return article_writer
     else:
         response.status_code = status.HTTP_400_BAD_REQUEST
@@ -229,6 +230,7 @@ async def update_excellent_student(request: Request,
             excellent_student.id = tmp_dict['id']
             excellent_student.id_person = tmp_dict['id_person']
             response.status_code = status.HTTP_200_OK
+            excellent_student.id_application = response.json()['id']
             return excellent_student
     else:
         response.status_code = status.HTTP_400_BAD_REQUEST
@@ -349,6 +351,7 @@ async def update_olympiad_winner(request: Request,
             olympiad_winner.id = tmp_dict['id']
             olympiad_winner.id_person = tmp_dict['id_person']
             response.status_code = status.HTTP_200_OK
+            olympiad_winner.id_application = response.json()['id']
             return olympiad_winner
     else:
         response.status_code = status.HTTP_400_BAD_REQUEST
