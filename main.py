@@ -373,3 +373,22 @@ async def delete_olympiad_winner(response: Response,
     else:
         response.status_code = status.HTTP_400_BAD_REQUEST
         return None
+
+
+@app.get('/api/educ_part/application', dependencies=[Depends(auth.implicit_scheme)])
+def get_achievements_by_application_id(request: Request,
+                                       response: Response,
+                                       user: Auth0User = Security(auth.get_user)):
+    token = request.headers['Authorization']
+    auth_headers = {'Authorization': f'{token}'}
+    response = requests.get("https://secure-gorge-99048.herokuapp.com/api/application/last/", headers=auth_headers)
+    application_id = response.json()['id']
+    cur.execute('''SELECT * FROM article_writers
+WHERE article_writers.id_application = %s''', [application_id])
+    a = cur.fetchall()
+    cur.execute('''SELECT * FROM olympiad_winners
+WHERE olympiad_winners.id_application = %s''', [application_id])
+    b = cur.fetchall()
+    cur.execute('''SELECT * FROM excellent_students
+WHERE excellent_students.id_application = %s''', [application_id])
+    return a + cur.fetchall() + b
